@@ -75,6 +75,47 @@ function buildBarChart(sample) {
     });
 }
 
+function buildBubbleChart(sample) {
+
+    d3.json("samples.json").then((data) => {
+
+        var samples = data.samples;
+        console.log(samples);
+
+        var sampleArray = samples.filter(sampleObject => sampleObject.id == sample);
+
+        var results = sampleArray[0];
+        console.log(results);
+
+        var otu_ids = results.otu_ids;
+        var otu_labels = results.otu_labels;
+        var sample_values = results.sample_values;
+
+        var bubbleLayout = {
+            title: "Bacteria Cultures Per Sample",
+            hovermode: "closest",
+            xaxis: {title: "OTU ID"},
+        };
+
+        var bubbleData = [
+            {
+                y: sample_values,
+                x: otu_ids,
+                text: otu_labels,
+                mode: "markers",
+                marker: {
+                    size: sample_values,
+                    color: otu_ids,
+                    colorscale: "Picnic"
+                }
+            }
+        ];
+
+        Plotly.newPlot("bubble", bubbleData, bubbleLayout);
+
+    });
+};
 
 buildMetaData(940);
 buildBarChart(940);
+buildBubbleChart (940);
