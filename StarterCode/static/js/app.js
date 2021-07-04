@@ -8,7 +8,7 @@ function buildMetaData(sample) {
 
         var sampleArray = metadata.filter(sampleObject => sampleObject.id == sample);
 
-        results = sampleArray[0];
+        var results = sampleArray[0];
         console.log(results);
 
         var panelBody = d3.select("#sample-metadata");
@@ -32,4 +32,49 @@ function buildMetaData(sample) {
         });
     });
 }
+
+function buildBarChart(sample) {
+
+    d3.json("samples.json").then((data) => {
+
+        var samples = data.samples;
+        console.log(samples);
+
+        var sampleArray = samples.filter(sampleObject => sampleObject.id == sample);
+
+        var results = sampleArray[0];
+        console.log(results);
+
+        var otu_ids = results.otu_ids;
+        var otu_labels = results.otu_labels;
+        var sample_values = results.sample_values;
+
+
+        var yticks = otu_ids.slice(0,10).map(otuID => `OTU ${otuID}`).reverse();
+        console.log(yticks);
+
+        var barData = [
+            {
+                y: yticks,
+                x: sample_values.slice(0,10).reverse(),
+                text: otu_labels.slice(0,10).reverse(),
+                type: "bar",
+                orientation: "h",
+            }
+        ];
+
+        barLayout = {
+            title: "Top 10 Bacterial Cultures Found",
+            hovermode: "closest",
+            xaxis: { title: "OTU Count in Sample"},
+            margin: {top: 100, bottom: 100, left: 100, right: 100 },
+        };
+
+        Plotly.newPlot("bar", barData, barLayout);
+
+    });
+}
+
+
 buildMetaData(940);
+buildBarChart(940);
