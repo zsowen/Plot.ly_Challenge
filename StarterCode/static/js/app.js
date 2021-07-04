@@ -18,18 +18,7 @@ function buildMetaData(sample) {
         Object.entries(results).forEach(([key,value]) => {
             console.log(`key: ${key} value: ${value}`);
             panelBody.append("h5").text(`${key.toUpperCase()}: ${value}`);
-        });
-
-        var selector = d3.select("#selDataset");
-
-        var sampleNames = data.names;
-
-        sampleNames.forEach((sample) =>  {
-            selector
-                .append("option")
-                .text(sample)
-                .property("value", sample);
-        });
+        });       
     });
 }
 
@@ -116,6 +105,31 @@ function buildBubbleChart(sample) {
     });
 };
 
-buildMetaData(940);
-buildBarChart(940);
-buildBubbleChart (940);
+function init() {
+    var selector = d3.select("#selDataset");
+    
+    d3.json("samples.json").then((data) => {
+        
+        var sampleNames = data.names;
+
+        sampleNames.forEach((sample) =>  {
+            selector
+                .append("option")
+                .text(sample)
+                .property("value", sample);
+        });
+
+        var initialSample = sampleNames[0];
+        buildMetaData(initialSample);
+        buildBarChart(initialSample);
+        buildBubbleChart(initialSample);
+    }); 
+}
+
+function optionChanged(newSample) {
+    buildMetaData(newSample);
+    buildBarChart(newSample);
+    buildBubbleChart(newSample);
+}
+
+init()
