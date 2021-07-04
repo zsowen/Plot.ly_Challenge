@@ -18,7 +18,57 @@ function buildMetaData(sample) {
         Object.entries(results).forEach(([key,value]) => {
             console.log(`key: ${key} value: ${value}`);
             panelBody.append("h5").text(`${key.toUpperCase()}: ${value}`);
-        });       
+        });  
+        
+        var wfreq = results.wfreq
+
+        var gaugeData = [
+            {
+              type: "indicator",
+              mode: "gauge+number+delta",
+              value: wfreq,
+              title: { text: "Belly Button Washing Frequency", font: { size: 24 } },
+              annotations: [{
+                  text: "Scrubs per Week",
+                    font: {
+                        size: 16,
+                    },
+              }],
+              gauge: {
+                axis: { range: [null, 9], tickwidth: 1, tickcolor: "darkblue" },
+                bar: { color: "red" },
+                bgcolor: "white",
+                borderwidth: 2,
+                bordercolor: "gray",
+                steps: [
+                  { range: [0,1], color: "#0d0887" },
+                  { range: [1,2], color: "#46039f" },
+                  { range: [2,3], color: "#7201a8" },
+                  { range: [3,4], color: "#9c179e" },
+                  { range: [4,5], color: "#bd3786" },
+                  { range: [5,6], color: "#d8576b" },
+                  { range: [6,7], color: "#ed7953" },
+                  { range: [7,8], color: "#fb9f3a" },
+                  { range: [8,9], color: "#fdca26" },
+                ],
+                threshold: {
+                  line: { color: "blue", width: 4 },
+                  thickness: 0.75,
+                  value: wfreq
+                }
+              }
+            }
+          ];
+          
+          var gaugeLayout = {
+            width: 500,
+            height: 400,
+            margin: { t: 25, r: 25, l: 25, b: 25 },
+            paper_bgcolor: "white",
+            font: { color: "darkblue", family: "Arial" }
+          };
+          
+          Plotly.newPlot('gauge', gaugeData, gaugeLayout);
     });
 }
 
